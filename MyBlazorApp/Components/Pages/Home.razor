@@ -1,0 +1,197 @@
+﻿@page "/"
+
+@* Hero *@
+<section class="relative min-h-screen flex items-end pb-20 overflow-hidden">
+    <div class="absolute inset-0"
+         style="background-image: url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1800&h=1100&fit=crop&auto=format'); background-size: cover; background-position: center 60%;">
+    </div>
+    <div class="absolute inset-0"
+         style="background: linear-gradient(to top, rgba(8,8,8,1) 0%, rgba(8,8,8,0.6) 50%, rgba(8,8,8,0.15) 100%);">
+    </div>
+
+    <div class="relative z-10 max-w-6xl mx-auto px-8 w-full">
+        <p class="text-sm uppercase tracking-widest mb-4"
+           style="color: #c8002a; font-family: 'DM Sans', sans-serif; letter-spacing: 0.22em;">
+            Premium Automotive
+        </p>
+        <h1 class="font-black uppercase leading-none mb-8"
+            style="font-family: 'Barlow Condensed', sans-serif; font-size: clamp(4rem, 10vw, 9rem); letter-spacing: -0.01em; color: #f0f0f0;">
+            Drive What<br />
+            <span style="color: #c8002a;">Moves</span> You.
+        </h1>
+        <p class="text-lg mb-10 max-w-lg"
+           style="color: #aaaaaa; font-family: 'DM Sans', sans-serif; line-height: 1.7;">
+            Apex Motors curates the world's finest performance and luxury vehicles — because the right car isn't just transportation, it's identity.
+        </p>
+        <div class="flex flex-wrap gap-4">
+            <a href="/inventory"
+               class="px-8 py-4 font-semibold uppercase tracking-widest no-underline transition-colors duration-200 hover:bg-red-700"
+               style="background-color: #c8002a; color: #fff; font-family: 'DM Sans', sans-serif; letter-spacing: 0.14em;">
+                Browse Inventory
+            </a>
+            <a href="/contact"
+               class="px-8 py-4 font-semibold uppercase tracking-widest no-underline transition-colors duration-200 hover:border-white hover:text-white"
+               style="border: 1px solid #444; color: #aaa; font-family: 'DM Sans', sans-serif; letter-spacing: 0.14em;">
+                Book Test Drive
+            </a>
+        </div>
+    </div>
+</section>
+
+@* Stats bar *@
+<section style="background-color: #111111; border-top: 1px solid #1a1a1a; border-bottom: 1px solid #1a1a1a;">
+    <div class="max-w-6xl mx-auto px-8 py-10 grid grid-cols-2 md:grid-cols-4 gap-8">
+        @foreach (var s in stats)
+        {
+            <div class="text-center">
+                <p class="font-black text-4xl mb-1"
+                   style="font-family: 'Barlow Condensed', sans-serif; color: #f0f0f0;">
+                    @s.Value
+                </p>
+                <p class="text-sm uppercase tracking-widest" style="color: #666; font-family: 'DM Sans', sans-serif; letter-spacing: 0.14em;">
+                    @s.Label
+                </p>
+            </div>
+        }
+    </div>
+</section>
+
+@* Featured vehicles *@
+<section class="max-w-6xl mx-auto px-8 py-24">
+    <div class="flex items-end justify-between mb-12">
+        <div>
+            <p class="text-sm uppercase tracking-widest mb-3"
+               style="color: #c8002a; font-family: 'DM Sans', sans-serif; letter-spacing: 0.22em;">
+                Hand-selected
+            </p>
+            <h2 class="font-black uppercase leading-none"
+                style="font-family: 'Barlow Condensed', sans-serif; font-size: clamp(2.5rem, 5vw, 4.5rem); color: #f0f0f0;">
+                Featured Vehicles
+            </h2>
+        </div>
+        <a href="/inventory"
+           class="hidden md:block text-sm font-medium uppercase tracking-widest no-underline hover:text-white transition-colors duration-200"
+           style="color: #666; font-family: 'DM Sans', sans-serif; letter-spacing: 0.14em;">
+            View all →
+        </a>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+        @foreach (var car in featured)
+        {
+            <a href="/inventory" class="group no-underline block" style="color: inherit;">
+                <div class="overflow-hidden mb-4"
+                     style="background-color: #111; aspect-ratio: 16/10;">
+                    <img src="@car.Img"
+                         alt="@car.Name"
+                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                </div>
+                <div class="flex items-start justify-between mb-2">
+                    <div>
+                        <span class="text-xs uppercase tracking-widest px-2 py-1 mr-2"
+                              style="background-color: #c8002a; color: #fff; font-family: 'DM Sans', sans-serif; letter-spacing: 0.14em;">
+                            @car.Tag
+                        </span>
+                        <span class="text-xs" style="color: #555; font-family: 'DM Sans', sans-serif;">
+                            @car.Year
+                        </span>
+                    </div>
+                    <span class="font-black text-xl"
+                          style="font-family: 'Barlow Condensed', sans-serif; color: #f0f0f0;">
+                        @car.Price
+                    </span>
+                </div>
+                <h3 class="font-bold text-xl mb-3 group-hover:text-white transition-colors duration-200"
+                    style="font-family: 'Barlow Condensed', sans-serif; color: #e0e0e0; letter-spacing: 0.02em;">
+                    @car.Name
+                </h3>
+                <div class="flex gap-3">
+                    @foreach (var spec in car.Specs)
+                    {
+                        <span class="text-xs px-2 py-1"
+                              style="background-color: #1a1a1a; color: #777; font-family: 'DM Sans', sans-serif;">
+                            @spec
+                        </span>
+                    }
+                </div>
+            </a>
+        }
+    </div>
+</section>
+
+@* CTA banner *@
+<section class="mx-8 mb-16 px-12 py-16 flex flex-col md:flex-row items-center justify-between gap-8"
+         style="background-color: #c8002a;">
+    <div>
+        <h2 class="font-black uppercase leading-none text-white mb-2"
+            style="font-family: 'Barlow Condensed', sans-serif; font-size: clamp(2rem, 4vw, 3.5rem);">
+            Ready to find your perfect drive?
+        </h2>
+        <p style="color: rgba(255,255,255,0.75); font-family: 'DM Sans', sans-serif;">
+            Our specialists are standing by. No pressure, just passion.
+        </p>
+    </div>
+    <a href="/contact"
+       class="flex-shrink-0 px-8 py-4 font-semibold uppercase tracking-widest no-underline transition-colors duration-200 hover:bg-gray-100"
+       style="background-color: #fff; color: #080808; font-family: 'DM Sans', sans-serif; letter-spacing: 0.14em;">
+        Get in Touch
+    </a>
+</section>
+
+@code {
+    public class Stat
+    {
+        public string Value { get; set; } = "";
+        public string Label { get; set; } = "";
+    }
+
+    public class Car
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = "";
+        public int Year { get; set; }
+        public string Price { get; set; } = "";
+        public string Tag { get; set; } = "";
+        public string Img { get; set; } = "";
+        public List<string> Specs { get; set; } = new();
+    }
+
+    private List<Stat> stats = new()
+    {
+        new Stat { Value = "500+", Label = "Vehicles in Stock" },
+        new Stat { Value = "12 Yrs", Label = "In Business" },
+        new Stat { Value = "4.9★", Label = "Average Rating" },
+        new Stat { Value = "98%", Label = "Customer Satisfaction" }
+    };
+
+    private List<Car> featured = new()
+    {
+        new Car {
+            Id = 1,
+            Name = "Porsche 911 GT3",
+            Year = 2025,
+            Price = "$189,500",
+            Tag = "New Arrival",
+            Img = "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=700&h=450&fit=crop&auto=format",
+            Specs = new List<string> { "4.0L Flat-6", "510 hp", "PDK 7-speed" }
+        },
+        new Car {
+            Id = 2,
+            Name = "BMW M4 Competition",
+            Year = 2024,
+            Price = "$94,800",
+            Tag = "Featured",
+            Img = "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=700&h=450&fit=crop&auto=format",
+            Specs = new List<string> { "3.0L Twin-Turbo", "503 hp", "M xDrive" }
+        },
+        new Car {
+            Id = 3,
+            Name = "Mercedes AMG GT",
+            Year = 2024,
+            Price = "$143,200",
+            Tag = "Hot Deal",
+            Img = "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=700&h=450&fit=crop&auto=format",
+            Specs = new List<string> { "4.0L Biturbo V8", "577 hp", "AMG Speedshift" }
+        }
+    };
+}

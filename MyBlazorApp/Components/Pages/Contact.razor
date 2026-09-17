@@ -1,0 +1,169 @@
+@page "/contact"
+
+<div class="pt-24 pb-16">
+    <div class="max-w-6xl mx-auto px-8">
+        <div class="mb-14">
+            <p class="text-sm uppercase tracking-widest mb-3"
+               style="color: #c8002a; font-family: 'DM Sans', sans-serif; letter-spacing: 0.22em;">
+                Get in touch
+            </p>
+            <h1 class="font-black uppercase leading-none"
+                style="font-family: 'Barlow Condensed', sans-serif; font-size: clamp(2.5rem, 5vw, 4.5rem); color: #f0f0f0;">
+                Book a Test Drive
+            </h1>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-16">
+            @* Form Area *@
+            <div>
+                @if (isSubmitted)
+                {
+                    <div class="h-full flex flex-col items-start justify-center py-16"
+                         style="border-left: 3px solid #c8002a; padding-left: 2rem;">
+                        <p class="font-black uppercase text-4xl mb-4"
+                           style="font-family: 'Barlow Condensed', sans-serif; color: #f0f0f0;">
+                            Request Received
+                        </p>
+                        <p style="color: #777; font-family: 'DM Sans', sans-serif; line-height: 1.7;">
+                            Thank you, @(string.IsNullOrWhiteSpace(form.Name) ? "there" : form.Name). One of our specialists will reach out to you within 24 hours to confirm your test drive appointment.
+                        </p>
+                        <button @onclick="ResetForm"
+                                class="mt-8 px-6 py-3 text-sm font-semibold uppercase tracking-widest transition-colors duration-200 hover:bg-red-700"
+                                style="background-color: #c8002a; color: #fff; font-family: 'DM Sans', sans-serif; letter-spacing: 0.14em; border: none; cursor: pointer;">
+                            Submit Another
+                        </button>
+                    </div>
+                }
+                else
+                {
+                    @* Blazor form binding using @bind and @onsubmit *@
+                    <form @onsubmit="HandleSubmit" @onsubmit:preventDefault="true" class="flex flex-col gap-5">
+                        <div class="grid sm:grid-cols-2 gap-5">
+                            <div>
+                                <label style="@labelStyle">Full Name *</label>
+                                <input @bind="form.Name" required placeholder="James Anderson" style="@inputStyle" 
+                                       onfocus="this.style.borderColor='#c8002a'" onblur="this.style.borderColor='#222'" />
+                            </div>
+                            <div>
+                                <label style="@labelStyle">Email *</label>
+                                <input type="email" @bind="form.Email" required placeholder="james@email.com" style="@inputStyle"
+                                       onfocus="this.style.borderColor='#c8002a'" onblur="this.style.borderColor='#222'" />
+                            </div>
+                        </div>
+
+                        <div class="grid sm:grid-cols-2 gap-5">
+                            <div>
+                                <label style="@labelStyle">Phone</label>
+                                <input type="tel" @bind="form.Phone" placeholder="+1 (310) 555-0000" style="@inputStyle"
+                                       onfocus="this.style.borderColor='#c8002a'" onblur="this.style.borderColor='#222'" />
+                            </div>
+                            <div>
+                                <label style="@labelStyle">Preferred Date</label>
+                                <input type="date" @bind="form.Date" style="@inputStyle color-scheme: dark;"
+                                       onfocus="this.style.borderColor='#c8002a'" onblur="this.style.borderColor='#222'" />
+                            </div>
+                        </div>
+
+                        <div>
+                            <label style="@labelStyle">Vehicle of Interest</label>
+                            <select @bind="form.Vehicle" style="@inputStyle cursor: pointer;"
+                                    onfocus="this.style.borderColor='#c8002a'" onblur="this.style.borderColor='#222'">
+                                <option value="">Select a vehicle…</option>
+                                <option>Porsche 911 GT3 (2025)</option>
+                                <option>BMW M4 Competition (2024)</option>
+                                <option>Mercedes AMG GT (2024)</option>
+                                <option>Lamborghini Huracán EVO (2023)</option>
+                                <option>Audi RS e-tron GT (2025)</option>
+                                <option>Ferrari Roma (2023)</option>
+                                <option>Range Rover SVAutobiography (2024)</option>
+                                <option>Tesla Model S Plaid (2024)</option>
+                                <option>Other / Not sure yet</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label style="@labelStyle">Message</label>
+                            <textarea @bind="form.Message" rows="4" placeholder="Tell us what you're looking for, your budget, or any questions you have…"
+                                      style="@inputStyle resize: vertical;"
+                                      onfocus="this.style.borderColor='#c8002a'" onblur="this.style.borderColor='#222'"></textarea>
+                        </div>
+
+                        <button type="submit"
+                                class="py-4 font-semibold uppercase tracking-widest transition-colors duration-200 hover:bg-red-700"
+                                style="background-color: #c8002a; color: #fff; font-family: 'DM Sans', sans-serif; letter-spacing: 0.14em; border: none; cursor: pointer; margin-top: 4px;">
+                            Submit Request
+                        </button>
+                    </form>
+                }
+            </div>
+
+            @* Info + Image *@
+            <div class="flex flex-col gap-10">
+                <div class="overflow-hidden" style="aspect-ratio: 4/3; background-color: #111;">
+                    <img src="https://images.unsplash.com/photo-1562141961-b8a3701571f1?w=800&h=600&fit=crop&auto=format"
+                         alt="Apex Motors showroom"
+                         class="w-full h-full object-cover" />
+                </div>
+
+                <div class="flex flex-col gap-6">
+                    @foreach (var info in InfoList)
+                    {
+                        <div class="flex gap-6 items-start" style="border-bottom: 1px solid #1a1a1a; padding-bottom: 1.25rem;">
+                            <span class="flex-shrink-0 text-xs uppercase tracking-widest pt-0.5"
+                                  style="color: #c8002a; font-family: 'DM Sans', sans-serif; letter-spacing: 0.14em; min-width: 64px;">
+                                @info.Label
+                            </span>
+                            <span style="color: #aaa; font-family: 'DM Sans', sans-serif; font-size: 0.9rem;">
+                                @info.Value
+                            </span>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private bool isSubmitted = false;
+    private ContactForm form = new();
+
+    private string inputStyle = "background-color: #111; border: 1px solid #222; color: #f0f0f0; font-family: 'DM Sans', sans-serif; outline: none; width: 100%; padding: 12px 16px; font-size: 0.9rem; transition: border-color 0.15s;";
+    private string labelStyle = "display: block; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.14em; color: #555; font-family: 'DM Sans', sans-serif; margin-bottom: 6px;";
+
+    public class ContactForm
+    {
+        public string Name { get; set; } = "";
+        public string Email { get; set; } = "";
+        public string Phone { get; set; } = "";
+        public string Vehicle { get; set; } = "";
+        public DateTime? Date { get; set; }
+        public string Message { get; set; } = "";
+    }
+
+    public class CompanyInfo
+    {
+        public string Label { get; set; } = "";
+        public string Value { get; set; } = "";
+    }
+
+    private List<CompanyInfo> InfoList = new()
+    {
+        new CompanyInfo { Label = "Address", Value = "4821 Motorway Blvd, Los Angeles, CA 90001" },
+        new CompanyInfo { Label = "Phone", Value = "+1 (310) 555-0192" },
+        new CompanyInfo { Label = "Email", Value = "hello@apexmotors.com" },
+        new CompanyInfo { Label = "Hours", Value = "Mon–Sat 9am–7pm · Sun 11am–5pm" }
+    };
+
+    private void HandleSubmit()
+    {
+        // Add backend API call here later
+        isSubmitted = true;
+    }
+
+    private void ResetForm()
+    {
+        isSubmitted = false;
+        form = new ContactForm();
+    }
+}

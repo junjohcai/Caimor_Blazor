@@ -1,0 +1,164 @@
+@page "/inventory"
+
+
+<div class="pt-24 max-w-6xl mx-auto px-8 pb-16">
+    <div class="mb-12">
+        <p class="text-sm uppercase tracking-widest mb-3"
+           style="color: #c8002a; font-family: 'DM Sans', sans-serif; letter-spacing: 0.22em;">
+            Browse
+        </p>
+        <h1 class="font-black uppercase leading-none mb-2"
+            style="font-family: 'Barlow Condensed', sans-serif; font-size: clamp(2.5rem, 5vw, 4.5rem); color: #f0f0f0;">
+            Our Inventory
+        </h1>
+        <p style="color: #666; font-family: 'DM Sans', sans-serif;">
+            @FilteredCars.Count() vehicles available
+        </p>
+    </div>
+
+    @* Filters *@
+    <div class="flex flex-col md:flex-row gap-6 items-start md:items-center justify-between mb-10 pb-8"
+         style="border-bottom: 1px solid #1a1a1a;">
+        
+        <div class="flex flex-wrap gap-2">
+            @foreach (var cat in Categories)
+            {
+                <button @onclick="() => activeCategory = cat"
+                        class="px-4 py-2 text-sm font-medium uppercase tracking-widest transition-colors duration-150"
+                        style="font-family: 'DM Sans', sans-serif; letter-spacing: 0.12em; 
+                               background-color: @(activeCategory == cat ? "#c8002a" : "#1a1a1a"); 
+                               color: @(activeCategory == cat ? "#fff" : "#777"); 
+                               border: none; cursor: pointer;">
+                    @cat
+                </button>
+            }
+        </div>
+
+        <div class="flex flex-wrap items-center gap-6">
+            <div class="flex items-center gap-3">
+                <label class="text-xs uppercase tracking-widest" style="color: #555; font-family: 'DM Sans', sans-serif; letter-spacing: 0.14em;">
+                    Max Price
+                </label>
+                <span class="text-sm font-medium" style="color: #f0f0f0; font-family: 'DM Sans', sans-serif; min-width: 80px;">
+                    @maxPrice.ToString("C0")
+                </span>
+                <input type="range" min="50000" max="300000" step="5000"
+                       @bind="maxPrice" @bind:event="oninput"
+                       class="w-28 accent-red-700 cursor-pointer" />
+            </div>
+
+            <select @bind="sortOption"
+                    class="px-4 py-2 text-sm font-medium cursor-pointer"
+                    style="background-color: #1a1a1a; color: #aaa; border: 1px solid #2a2a2a; font-family: 'DM Sans', sans-serif; outline: none;">
+                @foreach (var o in SortOptions)
+                {
+                    <option value="@o">@o</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    @* Grid *@
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        @foreach (var car in FilteredCars)
+        {
+            <div class="group" style="background-color: #111; cursor: pointer;">
+                <div class="overflow-hidden" style="aspect-ratio: 16/10; background-color: #1a1a1a;">
+                    <img src="@car.Img" alt="@car.Name"
+                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                </div>
+                <div class="p-5">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs px-2 py-0.5 uppercase tracking-widest"
+                              style="background-color: #1e1e1e; color: #777; font-family: 'DM Sans', sans-serif; letter-spacing: 0.12em;">
+                            @car.Category
+                        </span>
+                        <span class="text-xs" style="color: #444; font-family: 'DM Sans', sans-serif;">
+                            @car.Year · @car.Mileage
+                        </span>
+                    </div>
+                    <h3 class="font-bold text-xl mb-1"
+                        style="font-family: 'Barlow Condensed', sans-serif; color: #f0f0f0; letter-spacing: 0.02em;">
+                        @car.Name
+                    </h3>
+                    <div class="flex items-center justify-between mt-3">
+                        <span class="font-black text-2xl"
+                              style="font-family: 'Barlow Condensed', sans-serif; color: #f0f0f0;">
+                            @car.Price.ToString("C0")
+                        </span>
+                        <span class="text-xs" style="color: #555; font-family: 'DM Sans', sans-serif;">
+                            @car.Hp hp · @car.Transmission
+                        </span>
+                    </div>
+                    <a href="/contact"
+                       class="block mt-4 text-center py-3 text-sm font-semibold uppercase tracking-widest no-underline transition-colors duration-200 hover:bg-red-700"
+                       style="background-color: #c8002a; color: #fff; font-family: 'DM Sans', sans-serif; letter-spacing: 0.14em;">
+                        Enquire
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (!FilteredCars.Any())
+    {
+        <div class="text-center py-24">
+            <p class="text-4xl font-black uppercase mb-2" style="font-family: 'Barlow Condensed', sans-serif; color: #2a2a2a;">
+                No vehicles found
+            </p>
+            <p style="color: #444; font-family: 'DM Sans', sans-serif;">Try adjusting your filters.</p>
+        </div>
+    }
+</div>
+
+@code {
+    private string activeCategory = "All";
+    private string sortOption = "Price: Low to High";
+    private decimal maxPrice = 300000;
+
+    private List<string> Categories = new() { "All", "Sports", "Luxury", "Exotic", "Electric" };
+    private List<string> SortOptions = new() { "Price: Low to High", "Price: High to Low", "Newest First", "Most Powerful" };
+
+    public class Car
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = "";
+        public int Year { get; set; }
+        public decimal Price { get; set; }
+        public string Category { get; set; } = "";
+        public string Mileage { get; set; } = "";
+        public string Transmission { get; set; } = "";
+        public int Hp { get; set; }
+        public string Img { get; set; } = "";
+    }
+
+    private IEnumerable<Car> FilteredCars
+    {
+        get
+        {
+            var filtered = AllCars.Where(c => (activeCategory == "All" || c.Category == activeCategory) && c.Price <= maxPrice);
+
+            return sortOption switch
+            {
+                "Price: Low to High" => filtered.OrderBy(c => c.Price),
+                "Price: High to Low" => filtered.OrderByDescending(c => c.Price),
+                "Newest First" => filtered.OrderByDescending(c => c.Year),
+                "Most Powerful" => filtered.OrderByDescending(c => c.Hp),
+                _ => filtered
+            };
+        }
+    }
+
+    private List<Car> AllCars = new()
+    {
+        new Car { Id = 1, Name = "Porsche 911 GT3", Year = 2025, Price = 189500, Category = "Sports", Mileage = "0 mi", Transmission = "PDK", Hp = 510, Img = "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=700&h=450&fit=crop&auto=format" },
+        new Car { Id = 2, Name = "BMW M4 Competition", Year = 2024, Price = 94800, Category = "Sports", Mileage = "1,200 mi", Transmission = "Automatic", Hp = 503, Img = "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=700&h=450&fit=crop&auto=format" },
+        new Car { Id = 3, Name = "Mercedes AMG GT", Year = 2024, Price = 143200, Category = "Luxury", Mileage = "800 mi", Transmission = "Automatic", Hp = 577, Img = "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=700&h=450&fit=crop&auto=format" },
+        new Car { Id = 4, Name = "Lamborghini Huracán EVO", Year = 2023, Price = 261274, Category = "Exotic", Mileage = "3,400 mi", Transmission = "Automatic", Hp = 631, Img = "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=700&h=450&fit=crop&auto=format" },
+        new Car { Id = 5, Name = "Audi RS e-tron GT", Year = 2025, Price = 142400, Category = "Electric", Mileage = "0 mi", Transmission = "Automatic", Hp = 637, Img = "https://images3.alphacoders.com/112/1129804.jpg" },
+        new Car { Id = 6, Name = "Ferrari Roma", Year = 2023, Price = 228995, Category = "Exotic", Mileage = "1,800 mi", Transmission = "Automatic", Hp = 612, Img = "https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=700&h=450&fit=crop&auto=format" },
+        new Car { Id = 7, Name = "Range Rover SVAutobiography", Year = 2024, Price = 195000, Category = "Luxury", Mileage = "6,100 mi", Transmission = "Automatic", Hp = 523, Img = "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=700&h=450&fit=crop&auto=format" },
+        new Car { Id = 8, Name = "Tesla Model S Plaid", Year = 2024, Price = 89990, Category = "Electric", Mileage = "2,200 mi", Transmission = "Automatic", Hp = 1020, Img = "https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=700&h=450&fit=crop&auto=format" },
+        new Car { Id = 9, Name = "Porsche Cayenne Turbo GT", Year = 2024, Price = 182350, Category = "Luxury", Mileage = "4,600 mi", Transmission = "PDK", Hp = 640, Img = "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=700&h=450&fit=crop&auto=format" }
+    };
+}
