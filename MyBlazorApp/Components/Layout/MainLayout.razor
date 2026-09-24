@@ -1,24 +1,58 @@
 ﻿@inherits LayoutComponentBase
 
-<header class="fixed top-0 w-full z-50 flex items-center justify-between px-5 py-4 md:px-12" style="background-color: rgba(8, 8, 8, 0.95); backdrop-filter: blur(8px); border-bottom: 1px solid #1a1a1a;">
-    <a href="/" class="text-xl font-black uppercase tracking-widest no-underline" style="font-family: 'Barlow Condensed', sans-serif; color: #f0f0f0;">
-        APEX <span style="color: #c8002a;">MOTORS</span>
-    </a>
-    
-    <nav class="hidden md:flex gap-8 items-center">
-        <a href="/" class="text-xs font-semibold uppercase tracking-widest no-underline transition-colors hover:text-white" style="color: #aaa; font-family: 'DM Sans', sans-serif; letter-spacing: 0.14em;">
-            Home
+<div class="min-h-screen flex flex-col bg-[#080808] text-neutral-100">
+    @* Top Navigation Bar *@
+    <header class="fixed top-0 w-full z-50 flex items-center justify-between px-6 py-4 md:px-12 bg-[#080808]/95 backdrop-blur-md border-b border-neutral-900">
+        <a href="/" class="text-2xl font-black uppercase tracking-widest font-['Barlow_Condensed',sans-serif] text-neutral-100">
+            APEX <span class="text-[#c8002a]">MOTORS</span>
         </a>
-        <a href="/inventory" class="text-xs font-semibold uppercase tracking-widest no-underline transition-colors hover:text-white" style="color: #aaa; font-family: 'DM Sans', sans-serif; letter-spacing: 0.14em;">
-            Inventory
-        </a>
-        <a href="/contact" class="text-xs font-semibold uppercase tracking-widest no-underline transition-colors hover:text-white" style="color: #aaa; font-family: 'DM Sans', sans-serif; letter-spacing: 0.14em;">
-            Contact
-        </a>
-        <a href="/contact" class="px-6 py-2.5 text-xs font-semibold uppercase tracking-widest no-underline transition-colors duration-200 hover:bg-red-700" style="background-color: #c8002a; color: #fff; font-family: 'DM Sans', sans-serif; letter-spacing: 0.14em;">
-            Book a Test Drive
-        </a>
-    </nav>
-</header>
+        
+        <nav class="hidden md:flex gap-8 items-center font-['DM_Sans',sans-serif] text-xs font-semibold uppercase tracking-[0.14em]">
+            <a href="/" class="text-neutral-400 hover:text-white transition-colors">Home</a>
+            <a href="/inventory" class="text-neutral-400 hover:text-white transition-colors">Inventory</a>
+            <a href="/contact" class="text-neutral-400 hover:text-white transition-colors">Contact</a>
+            <a href="/contact" class="px-6 py-2.5 bg-[#c8002a] text-white hover:bg-red-700 transition-colors">
+                Book a Test Drive
+            </a>
+        </nav>
 
-@Body
+        @* Mobile Toggle Button *@
+        <button @onclick="() => isMenuOpen = !isMenuOpen" class="md:hidden text-neutral-300 hover:text-white p-2">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="@(isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16")" />
+            </svg>
+        </button>
+    </header>
+
+    @* Mobile Dropdown Menu *@
+    @if (isMenuOpen)
+    {
+        <div class="fixed top-[65px] left-0 w-full bg-[#080808] border-b border-neutral-800 z-40 md:hidden flex flex-col p-6 gap-4 font-['DM_Sans',sans-serif] text-sm uppercase tracking-widest">
+            <a href="/" @onclick="() => isMenuOpen = false" class="text-neutral-300 hover:text-white">Home</a>
+            <a href="/inventory" @onclick="() => isMenuOpen = false" class="text-neutral-300 hover:text-white">Inventory</a>
+            <a href="/contact" @onclick="() => isMenuOpen = false" class="text-neutral-300 hover:text-white">Contact</a>
+            <a href="/contact" @onclick="() => isMenuOpen = false" class="text-center py-3 bg-[#c8002a] text-white font-semibold">Book a Test Drive</a>
+        </div>
+    }
+
+    @* Page Body Content *@
+    <main class="flex-grow">
+        @Body
+    </main>
+
+    @* Global Footer *@
+    <footer class="border-t border-neutral-900 bg-[#0d0d0d] py-12 px-8">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 text-xs text-neutral-500 font-['DM_Sans',sans-serif]">
+            <p>© @DateTime.Now.Year APEX MOTORS Inc. All rights reserved.</p>
+            <div class="flex gap-6 uppercase tracking-wider">
+                <a href="/inventory" class="hover:text-neutral-300 transition-colors">Inventory</a>
+                <a href="/contact" class="hover:text-neutral-300 transition-colors">Privacy Policy</a>
+                <a href="/contact" class="hover:text-neutral-300 transition-colors">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
+</div>
+
+@code {
+    private bool isMenuOpen = false;
+}
