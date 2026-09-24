@@ -1,98 +1,92 @@
 @page "/inventory"
 
-
 <div class="pt-24 max-w-6xl mx-auto px-8 pb-16">
     <div class="mb-12">
-        <p class="text-sm uppercase tracking-widest mb-3"
-           style="color: #c8002a; font-family: 'DM Sans', sans-serif; letter-spacing: 0.22em;">
+        <p class="text-sm uppercase tracking-[0.22em] mb-3 text-[#c8002a] font-['DM_Sans',sans-serif]">
             Browse
         </p>
-        <h1 class="font-black uppercase leading-none mb-2"
-            style="font-family: 'Barlow Condensed', sans-serif; font-size: clamp(2.5rem, 5vw, 4.5rem); color: #f0f0f0;">
+        <h1 class="font-black uppercase leading-none mb-2 text-[#f0f0f0] font-['Barlow_Condensed',sans-serif] text-5xl md:text-7xl">
             Our Inventory
         </h1>
-        <p style="color: #666; font-family: 'DM Sans', sans-serif;">
+        <p class="text-neutral-500 font-['DM_Sans',sans-serif]">
             @FilteredCars.Count() vehicles available
         </p>
     </div>
 
-    @* Filters *@
-    <div class="flex flex-col md:flex-row gap-6 items-start md:items-center justify-between mb-10 pb-8"
-         style="border-bottom: 1px solid #1a1a1a;">
-        
-        <div class="flex flex-wrap gap-2">
-            @foreach (var cat in Categories)
-            {
-                <button @onclick="() => activeCategory = cat"
-                        class="px-4 py-2 text-sm font-medium uppercase tracking-widest transition-colors duration-150"
-                        style="font-family: 'DM Sans', sans-serif; letter-spacing: 0.12em; 
-                               background-color: @(activeCategory == cat ? "#c8002a" : "#1a1a1a"); 
-                               color: @(activeCategory == cat ? "#fff" : "#777"); 
-                               border: none; cursor: pointer;">
-                    @cat
-                </button>
-            }
+    @* Search & Filters Header *@
+    <div class="flex flex-col gap-6 mb-10 pb-8 border-b border-neutral-900">
+        <div class="w-full">
+            <input type="text" placeholder="Search by model or make..."
+                   @bind="searchTerm" @bind:event="oninput"
+                   class="w-full bg-[#111] border border-neutral-800 text-neutral-100 px-4 py-3 text-sm font-['DM_Sans',sans-serif] outline-none focus:border-[#c8002a] transition-colors" />
         </div>
 
-        <div class="flex flex-wrap items-center gap-6">
-            <div class="flex items-center gap-3">
-                <label class="text-xs uppercase tracking-widest" style="color: #555; font-family: 'DM Sans', sans-serif; letter-spacing: 0.14em;">
-                    Max Price
-                </label>
-                <span class="text-sm font-medium" style="color: #f0f0f0; font-family: 'DM Sans', sans-serif; min-width: 80px;">
-                    @maxPrice.ToString("C0")
-                </span>
-                <input type="range" min="50000" max="300000" step="5000"
-                       @bind="maxPrice" @bind:event="oninput"
-                       class="w-28 accent-red-700 cursor-pointer" />
+        <div class="flex flex-col md:flex-row gap-6 items-start md:items-center justify-between">
+            <div class="flex flex-wrap gap-2">
+                @foreach (var cat in Categories)
+                {
+                    <button @onclick="() => activeCategory = cat"
+                            class="px-4 py-2 text-sm font-medium uppercase tracking-[0.12em] font-['DM_Sans',sans-serif] transition-colors duration-150 @(activeCategory == cat ? "bg-[#c8002a] text-white" : "bg-neutral-900 text-neutral-400 hover:text-white")">
+                        @cat
+                    </button>
+                }
             </div>
 
-            <select @bind="sortOption"
-                    class="px-4 py-2 text-sm font-medium cursor-pointer"
-                    style="background-color: #1a1a1a; color: #aaa; border: 1px solid #2a2a2a; font-family: 'DM Sans', sans-serif; outline: none;">
-                @foreach (var o in SortOptions)
-                {
-                    <option value="@o">@o</option>
-                }
-            </select>
+            <div class="flex flex-wrap items-center gap-6">
+                <div class="flex items-center gap-3">
+                    <label class="text-xs uppercase tracking-[0.14em] text-neutral-500 font-['DM_Sans',sans-serif]">
+                        Max Price
+                    </label>
+                    <span class="text-sm font-medium text-neutral-100 font-['DM_Sans',sans-serif] min-w-20">
+                        @maxPrice.ToString("C0")
+                    </span>
+                    <input type="range" min="50000" max="300000" step="5000"
+                           @bind="maxPrice" @bind:event="oninput"
+                           class="w-28 accent-[#c8002a] cursor-pointer" />
+                </div>
+
+                <select @bind="sortOption"
+                        class="px-4 py-2 text-sm font-medium bg-neutral-900 text-neutral-300 border border-neutral-800 font-['DM_Sans',sans-serif] outline-none focus:border-[#c8002a] cursor-pointer">
+                    @foreach (var o in SortOptions)
+                    {
+                        <option value="@o">@o</option>
+                    }
+                </select>
+            </div>
         </div>
     </div>
 
-    @* Grid *@
+    @* Cars Grid *@
     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
         @foreach (var car in FilteredCars)
         {
-            <div class="group" style="background-color: #111; cursor: pointer;">
-                <div class="overflow-hidden" style="aspect-ratio: 16/10; background-color: #1a1a1a;">
+            <div class="group bg-[#111] border border-neutral-900 hover:border-neutral-700 transition-colors duration-300">
+                <div class="overflow-hidden aspect-[16/10] bg-neutral-900">
                     <img src="@car.Img" alt="@car.Name"
                          class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                 </div>
                 <div class="p-5">
                     <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs px-2 py-0.5 uppercase tracking-widest"
-                              style="background-color: #1e1e1e; color: #777; font-family: 'DM Sans', sans-serif; letter-spacing: 0.12em;">
+                        <span class="text-xs px-2 py-0.5 uppercase tracking-[0.12em] bg-neutral-900 text-neutral-400 font-['DM_Sans',sans-serif]">
                             @car.Category
                         </span>
-                        <span class="text-xs" style="color: #444; font-family: 'DM Sans', sans-serif;">
+                        <span class="text-xs text-neutral-500 font-['DM_Sans',sans-serif]">
                             @car.Year · @car.Mileage
                         </span>
                     </div>
-                    <h3 class="font-bold text-xl mb-1"
-                        style="font-family: 'Barlow Condensed', sans-serif; color: #f0f0f0; letter-spacing: 0.02em;">
+                    <h3 class="font-bold text-xl mb-1 text-neutral-200 group-hover:text-white font-['Barlow_Condensed',sans-serif] tracking-wide transition-colors">
                         @car.Name
                     </h3>
                     <div class="flex items-center justify-between mt-3">
-                        <span class="font-black text-2xl"
-                              style="font-family: 'Barlow Condensed', sans-serif; color: #f0f0f0;">
+                        <span class="font-black text-2xl text-neutral-100 font-['Barlow_Condensed',sans-serif]">
                             @car.Price.ToString("C0")
                         </span>
-                        <span class="text-xs" style="color: #555; font-family: 'DM Sans', sans-serif;">
+                        <span class="text-xs text-neutral-500 font-['DM_Sans',sans-serif]">
                             @car.Hp hp · @car.Transmission
                         </span>
                     </div>
                     <a href="/contact"
-                       class="block mt-4 text-center py-3 text-sm font-semibold uppercase tracking-widest no-underline transition-colors duration-200 hover:bg-red-700"
-                       style="background-color: #c8002a; color: #fff; font-family: 'DM Sans', sans-serif; letter-spacing: 0.14em;">
+                       class="block mt-4 text-center py-3 text-sm font-semibold uppercase tracking-[0.14em] text-white bg-[#c8002a] hover:bg-red-700 transition-colors duration-200">
                         Enquire
                     </a>
                 </div>
@@ -103,15 +97,16 @@
     @if (!FilteredCars.Any())
     {
         <div class="text-center py-24">
-            <p class="text-4xl font-black uppercase mb-2" style="font-family: 'Barlow Condensed', sans-serif; color: #2a2a2a;">
+            <p class="text-4xl font-black uppercase mb-2 text-neutral-700 font-['Barlow_Condensed',sans-serif]">
                 No vehicles found
             </p>
-            <p style="color: #444; font-family: 'DM Sans', sans-serif;">Try adjusting your filters.</p>
+            <p class="text-neutral-500 font-['DM_Sans',sans-serif]">Try adjusting your search query or filters.</p>
         </div>
     }
 </div>
 
 @code {
+    private string searchTerm = "";
     private string activeCategory = "All";
     private string sortOption = "Price: Low to High";
     private decimal maxPrice = 300000;
@@ -136,7 +131,11 @@
     {
         get
         {
-            var filtered = AllCars.Where(c => (activeCategory == "All" || c.Category == activeCategory) && c.Price <= maxPrice);
+            var filtered = AllCars.Where(c =>
+                (activeCategory == "All" || c.Category == activeCategory) &&
+                c.Price <= maxPrice &&
+                (string.IsNullOrWhiteSpace(searchTerm) || c.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+            );
 
             return sortOption switch
             {
@@ -155,7 +154,7 @@
         new Car { Id = 2, Name = "BMW M4 Competition", Year = 2024, Price = 94800, Category = "Sports", Mileage = "1,200 mi", Transmission = "Automatic", Hp = 503, Img = "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=700&h=450&fit=crop&auto=format" },
         new Car { Id = 3, Name = "Mercedes AMG GT", Year = 2024, Price = 143200, Category = "Luxury", Mileage = "800 mi", Transmission = "Automatic", Hp = 577, Img = "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=700&h=450&fit=crop&auto=format" },
         new Car { Id = 4, Name = "Lamborghini Huracán EVO", Year = 2023, Price = 261274, Category = "Exotic", Mileage = "3,400 mi", Transmission = "Automatic", Hp = 631, Img = "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=700&h=450&fit=crop&auto=format" },
-        new Car { Id = 5, Name = "Audi RS e-tron GT", Year = 2025, Price = 142400, Category = "Electric", Mileage = "0 mi", Transmission = "Automatic", Hp = 637, Img = "https://images3.alphacoders.com/112/1129804.jpg" },
+        new Car { Id = 5, Name = "Audi RS e-tron GT", Year = 2025, Price = 142400, Category = "Electric", Mileage = "0 mi", Transmission = "Automatic", Hp = 637, Img = "https://images.unsplash.com/photo-1621007806512-be7837a5ce82?w=700&h=450&fit=crop&auto=format" },
         new Car { Id = 6, Name = "Ferrari Roma", Year = 2023, Price = 228995, Category = "Exotic", Mileage = "1,800 mi", Transmission = "Automatic", Hp = 612, Img = "https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=700&h=450&fit=crop&auto=format" },
         new Car { Id = 7, Name = "Range Rover SVAutobiography", Year = 2024, Price = 195000, Category = "Luxury", Mileage = "6,100 mi", Transmission = "Automatic", Hp = 523, Img = "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=700&h=450&fit=crop&auto=format" },
         new Car { Id = 8, Name = "Tesla Model S Plaid", Year = 2024, Price = 89990, Category = "Electric", Mileage = "2,200 mi", Transmission = "Automatic", Hp = 1020, Img = "https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=700&h=450&fit=crop&auto=format" },
