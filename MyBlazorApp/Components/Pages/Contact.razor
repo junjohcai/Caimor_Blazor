@@ -3,12 +3,10 @@
 <div class="pt-24 pb-16">
     <div class="max-w-6xl mx-auto px-8">
         <div class="mb-14">
-            <p class="text-sm uppercase tracking-widest mb-3"
-               style="color: #c8002a; font-family: 'DM Sans', sans-serif; letter-spacing: 0.22em;">
+            <p class="text-sm uppercase tracking-[0.22em] mb-3 text-[#c8002a] font-['DM_Sans',sans-serif]">
                 Get in touch
             </p>
-            <h1 class="font-black uppercase leading-none"
-                style="font-family: 'Barlow Condensed', sans-serif; font-size: clamp(2.5rem, 5vw, 4.5rem); color: #f0f0f0;">
+            <h1 class="font-black uppercase leading-none text-[#f0f0f0] font-['Barlow_Condensed',sans-serif] text-5xl md:text-7xl">
                 Book a Test Drive
             </h1>
         </div>
@@ -18,56 +16,62 @@
             <div>
                 @if (isSubmitted)
                 {
-                    <div class="h-full flex flex-col items-start justify-center py-16"
-                         style="border-left: 3px solid #c8002a; padding-left: 2rem;">
-                        <p class="font-black uppercase text-4xl mb-4"
-                           style="font-family: 'Barlow Condensed', sans-serif; color: #f0f0f0;">
+                    <div class="h-full flex flex-col items-start justify-center py-16 border-l-4 border-[#c8002a] pl-8">
+                        <p class="font-black uppercase text-4xl mb-4 text-[#f0f0f0] font-['Barlow_Condensed',sans-serif]">
                             Request Received
                         </p>
-                        <p style="color: #777; font-family: 'DM Sans', sans-serif; line-height: 1.7;">
+                        <p class="text-neutral-400 font-['DM_Sans',sans-serif] leading-relaxed">
                             Thank you, @(string.IsNullOrWhiteSpace(form.Name) ? "there" : form.Name). One of our specialists will reach out to you within 24 hours to confirm your test drive appointment.
                         </p>
                         <button @onclick="ResetForm"
-                                class="mt-8 px-6 py-3 text-sm font-semibold uppercase tracking-widest transition-colors duration-200 hover:bg-red-700"
-                                style="background-color: #c8002a; color: #fff; font-family: 'DM Sans', sans-serif; letter-spacing: 0.14em; border: none; cursor: pointer;">
+                                class="mt-8 px-6 py-3 text-sm font-semibold uppercase tracking-[0.14em] text-white bg-[#c8002a] hover:bg-red-700 transition-colors duration-200">
                             Submit Another
                         </button>
                     </div>
                 }
                 else
                 {
-                    @* Blazor form binding using @bind and @onsubmit *@
                     <form @onsubmit="HandleSubmit" @onsubmit:preventDefault="true" class="flex flex-col gap-5">
                         <div class="grid sm:grid-cols-2 gap-5">
                             <div>
-                                <label style="@labelStyle">Full Name *</label>
-                                <input @bind="form.Name" required placeholder="James Anderson" style="@inputStyle" 
-                                       onfocus="this.style.borderColor='#c8002a'" onblur="this.style.borderColor='#222'" />
+                                <label class="block text-xs uppercase tracking-[0.14em] text-neutral-500 mb-1.5 font-['DM_Sans',sans-serif]">
+                                    Full Name *
+                                </label>
+                                <input @bind="form.Name" required placeholder="James Anderson"
+                                       class="w-full bg-[#111] border border-neutral-800 text-neutral-100 px-4 py-3 text-sm font-['DM_Sans',sans-serif] outline-none focus:border-[#c8002a] transition-colors" />
                             </div>
                             <div>
-                                <label style="@labelStyle">Email *</label>
-                                <input type="email" @bind="form.Email" required placeholder="james@email.com" style="@inputStyle"
-                                       onfocus="this.style.borderColor='#c8002a'" onblur="this.style.borderColor='#222'" />
+                                <label class="block text-xs uppercase tracking-[0.14em] text-neutral-500 mb-1.5 font-['DM_Sans',sans-serif]">
+                                    Email *
+                                </label>
+                                <input type="email" @bind="form.Email" required placeholder="james@email.com"
+                                       class="w-full bg-[#111] border border-neutral-800 text-neutral-100 px-4 py-3 text-sm font-['DM_Sans',sans-serif] outline-none focus:border-[#c8002a] transition-colors" />
                             </div>
                         </div>
 
                         <div class="grid sm:grid-cols-2 gap-5">
                             <div>
-                                <label style="@labelStyle">Phone</label>
-                                <input type="tel" @bind="form.Phone" placeholder="+1 (310) 555-0000" style="@inputStyle"
-                                       onfocus="this.style.borderColor='#c8002a'" onblur="this.style.borderColor='#222'" />
+                                <label class="block text-xs uppercase tracking-[0.14em] text-neutral-500 mb-1.5 font-['DM_Sans',sans-serif]">
+                                    Phone
+                                </label>
+                                <input type="tel" @bind="form.Phone" placeholder="+1 (310) 555-0000"
+                                       class="w-full bg-[#111] border border-neutral-800 text-neutral-100 px-4 py-3 text-sm font-['DM_Sans',sans-serif] outline-none focus:border-[#c8002a] transition-colors" />
                             </div>
                             <div>
-                                <label style="@labelStyle">Preferred Date</label>
-                                <input type="date" @bind="form.Date" style="@inputStyle color-scheme: dark;"
-                                       onfocus="this.style.borderColor='#c8002a'" onblur="this.style.borderColor='#222'" />
+                                <label class="block text-xs uppercase tracking-[0.14em] text-neutral-500 mb-1.5 font-['DM_Sans',sans-serif]">
+                                    Preferred Date
+                                </label>
+                                <input type="date" @bind="form.Date"
+                                       class="w-full bg-[#111] border border-neutral-800 text-neutral-100 px-4 py-3 text-sm font-['DM_Sans',sans-serif] outline-none focus:border-[#c8002a] [color-scheme:dark] transition-colors" />
                             </div>
                         </div>
 
                         <div>
-                            <label style="@labelStyle">Vehicle of Interest</label>
-                            <select @bind="form.Vehicle" style="@inputStyle cursor: pointer;"
-                                    onfocus="this.style.borderColor='#c8002a'" onblur="this.style.borderColor='#222'">
+                            <label class="block text-xs uppercase tracking-[0.14em] text-neutral-500 mb-1.5 font-['DM_Sans',sans-serif]">
+                                Vehicle of Interest
+                            </label>
+                            <select @bind="form.Vehicle"
+                                    class="w-full bg-[#111] border border-neutral-800 text-neutral-100 px-4 py-3 text-sm font-['DM_Sans',sans-serif] outline-none focus:border-[#c8002a] cursor-pointer transition-colors">
                                 <option value="">Select a vehicle…</option>
                                 <option>Porsche 911 GT3 (2025)</option>
                                 <option>BMW M4 Competition (2024)</option>
@@ -82,24 +86,24 @@
                         </div>
 
                         <div>
-                            <label style="@labelStyle">Message</label>
+                            <label class="block text-xs uppercase tracking-[0.14em] text-neutral-500 mb-1.5 font-['DM_Sans',sans-serif]">
+                                Message
+                            </label>
                             <textarea @bind="form.Message" rows="4" placeholder="Tell us what you're looking for, your budget, or any questions you have…"
-                                      style="@inputStyle resize: vertical;"
-                                      onfocus="this.style.borderColor='#c8002a'" onblur="this.style.borderColor='#222'"></textarea>
+                                      class="w-full bg-[#111] border border-neutral-800 text-neutral-100 px-4 py-3 text-sm font-['DM_Sans',sans-serif] outline-none focus:border-[#c8002a] resize-y transition-colors"></textarea>
                         </div>
 
                         <button type="submit"
-                                class="py-4 font-semibold uppercase tracking-widest transition-colors duration-200 hover:bg-red-700"
-                                style="background-color: #c8002a; color: #fff; font-family: 'DM Sans', sans-serif; letter-spacing: 0.14em; border: none; cursor: pointer; margin-top: 4px;">
+                                class="mt-1 py-4 font-semibold uppercase tracking-[0.14em] text-white bg-[#c8002a] hover:bg-red-700 transition-colors duration-200 cursor-pointer">
                             Submit Request
                         </button>
                     </form>
                 }
             </div>
 
-            @* Info + Image *@
+            @* Showroom Info *@
             <div class="flex flex-col gap-10">
-                <div class="overflow-hidden" style="aspect-ratio: 4/3; background-color: #111;">
+                <div class="aspect-[4/3] bg-neutral-900 overflow-hidden">
                     <img src="https://images.unsplash.com/photo-1562141961-b8a3701571f1?w=800&h=600&fit=crop&auto=format"
                          alt="Apex Motors showroom"
                          class="w-full h-full object-cover" />
@@ -108,12 +112,11 @@
                 <div class="flex flex-col gap-6">
                     @foreach (var info in InfoList)
                     {
-                        <div class="flex gap-6 items-start" style="border-bottom: 1px solid #1a1a1a; padding-bottom: 1.25rem;">
-                            <span class="flex-shrink-0 text-xs uppercase tracking-widest pt-0.5"
-                                  style="color: #c8002a; font-family: 'DM Sans', sans-serif; letter-spacing: 0.14em; min-width: 64px;">
+                        <div class="flex gap-6 items-start border-b border-neutral-900 pb-5">
+                            <span class="shrink-0 text-xs uppercase tracking-[0.14em] pt-0.5 text-[#c8002a] font-['DM_Sans',sans-serif] min-w-16">
                                 @info.Label
                             </span>
-                            <span style="color: #aaa; font-family: 'DM Sans', sans-serif; font-size: 0.9rem;">
+                            <span class="text-neutral-400 font-['DM_Sans',sans-serif] text-sm">
                                 @info.Value
                             </span>
                         </div>
@@ -127,9 +130,6 @@
 @code {
     private bool isSubmitted = false;
     private ContactForm form = new();
-
-    private string inputStyle = "background-color: #111; border: 1px solid #222; color: #f0f0f0; font-family: 'DM Sans', sans-serif; outline: none; width: 100%; padding: 12px 16px; font-size: 0.9rem; transition: border-color 0.15s;";
-    private string labelStyle = "display: block; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.14em; color: #555; font-family: 'DM Sans', sans-serif; margin-bottom: 6px;";
 
     public class ContactForm
     {
@@ -155,11 +155,7 @@
         new CompanyInfo { Label = "Hours", Value = "Mon–Sat 9am–7pm · Sun 11am–5pm" }
     };
 
-    private void HandleSubmit()
-    {
-        // Add backend API call here later
-        isSubmitted = true;
-    }
+    private void HandleSubmit() => isSubmitted = true;
 
     private void ResetForm()
     {
