@@ -1,4 +1,7 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager NavManager
+@inject IJSRuntime JSRuntime
+@implements IDisposable
 
 <div class="min-h-screen flex flex-col bg-[#080808] text-neutral-100">
     @* Top Navigation Bar *@
@@ -35,9 +38,11 @@
         </div>
     }
 
-    @* Page Body Content *@
+    @* Page Body Content wrapped for transitions *@
     <main class="flex-grow">
-        @Body
+        <div @key="currentUrl" class="animate-page-in">
+            @Body
+        </div>
     </main>
 
     @* Global Footer *@
@@ -53,6 +58,49 @@
     </footer>
 </div>
 
+<style>
+    /* Premium Fade and Slide Up Animation */
+    @@keyframes pageIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .animate-page-in {
+        animation: pageIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+</style>
+
 @code {
     private bool isMenuOpen = false;
+    private string currentUrl = "";
+
+    protected override void OnInitialized()
+    {
+        currentUrl = NavManager.Uri;
+        // Listen for whenever the user clicks a link to change pages
+        NavManager.LocationChanged += OnLocationChanged;
+    }
+
+    private async void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        currentUrl = e.Location;
+        isMenuOpen = false; // Auto-close mobile menu on navigation
+        
+        // Tell Blazor to re-render the layout, triggering the @key animation
+        StateHasChanged();
+        
+        // Use JavaScript to force the browser scrollbar back to the very top
+        await JSRuntime.InvokeVoidAsync("window.scrollTo", 0, 0);
+    }
+
+    public void Dispose()
+    {
+        NavManager.LocationChanged -= OnLocationChanged;
+    }
 }
