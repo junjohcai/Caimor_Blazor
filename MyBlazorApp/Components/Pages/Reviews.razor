@@ -1,0 +1,142 @@
+@page "/reviews"
+@rendermode InteractiveServer
+<PageTitle>Client Feedback | Apex Motors</PageTitle>
+
+<div class="min-h-screen bg-[#0a0a0a] text-[#f0f0f0] py-20 px-6">
+    <div class="max-w-4xl mx-auto mt-12">
+        
+        <!-- Header -->
+        <h1 class="text-[clamp(2.5rem,5vw,4rem)] font-black uppercase leading-none tracking-tight mb-4 font-['Barlow_Condensed',sans-serif]">
+            Client <span class="text-[#c8002a]">Feedback</span>
+        </h1>
+        <p class="text-gray-400 mb-12">Read what our clients have to say, or share your own Apex Motors experience.</p>
+
+        <!-- Submit Review Form -->
+        <div class="bg-[#151515] p-8 rounded border border-gray-800 mb-16 shadow-xl">
+            <h2 class="text-2xl font-bold uppercase tracking-wide mb-6">Leave a Review</h2>
+            
+            <div class="space-y-5">
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">Your Name</label>
+                    <input @bind="newName" class="w-full bg-[#0a0a0a] border border-gray-700 rounded p-3 text-white focus:outline-none focus:border-[#c8002a] transition-colors" placeholder="John Doe" />
+                </div>
+                
+                <div>
+                    <label class="block text-sm text-gray-400 mb-2">Rating</label>
+                    <div class="flex space-x-2" @onmouseleave="ResetHover">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            int starValue = i;
+                            bool isFilled = starValue <= (hoverRating > 0 ? hoverRating : newRating);
+
+                            <button type="button" 
+                                    @onclick="() => SetRating(starValue)"
+                                    @onmouseover="() => SetHover(starValue)"
+                                    class="text-4xl focus:outline-none transition-colors duration-150 @(isFilled ? "text-[#c8002a] drop-shadow-md" : "text-gray-500 hover:text-gray-400")">
+                                @(isFilled ? "★" : "☆")
+                            </button>
+                        }
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">Comment</label>
+                    <textarea @bind="newComment" rows="4" class="w-full bg-[#0a0a0a] border border-gray-700 rounded p-3 text-white focus:outline-none focus:border-[#c8002a] transition-colors" placeholder="Share your experience..."></textarea>
+                </div>
+
+                <button @onclick="SubmitReview" class="bg-[#c8002a] hover:bg-[#a00020] text-white font-bold py-3 px-8 rounded transition duration-300 w-full sm:w-auto">
+                    SUBMIT REVIEW
+                </button>
+            </div>
+        </div>
+
+        <!-- Display Reviews Section -->
+        <div class="space-y-6">
+            <h2 class="text-2xl font-bold uppercase tracking-wide mb-6 border-b border-gray-800 pb-2">Recent Reviews</h2>
+            
+            @if (reviews.Count == 0)
+            {
+                <p class="text-gray-500 italic">No reviews yet. Be the first to share your experience!</p>
+            }
+            else
+            {
+                @foreach (var review in reviews)
+                {
+                    <div class="bg-[#151515] p-6 rounded border border-gray-800 hover:border-gray-700 transition-colors">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="font-bold text-lg">@review.Name</span>
+                            <span class="text-[#c8002a] text-xl tracking-widest drop-shadow-md">
+                                @for (int i = 0; i < review.Rating; i++) { <text>★</text> }
+                                @for (int i = review.Rating; i < 5; i++) { <span class="text-gray-700">★</span> }
+                            </span>
+                        </div>
+                        <p class="text-gray-500 text-xs mb-4 uppercase tracking-wider">@review.Date.ToString("MMMM dd, yyyy")</p>
+                        <p class="text-gray-300 italic">"@review.Comment"</p>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    // 1. Define what a 'Review' looks like
+    public class Review
+    {
+        public string Name { get; set; } = "";
+        public int Rating { get; set; }
+        public string Comment { get; set; } = "";
+        public DateTime Date { get; set; }
+    }
+
+    // 2. Create a temporary in-memory list to hold the reviews
+    private List<Review> reviews = new List<Review>
+    {
+        // Adding a couple of dummy reviews so the page isn't empty on load
+        new Review { Name = "Marcus T.", Rating = 5, Comment = "Incredible experience. The test drive was phenomenal and the staff was very knowledgeable about the performance specs.", Date = DateTime.Now.AddDays(-2) },
+        new Review { Name = "Sarah J.", Rating = 4, Comment = "Beautiful showroom and excellent selection of luxury vehicles. The purchasing process was seamless.", Date = DateTime.Now.AddDays(-5) }
+    };
+
+    // 3. Variables bound to our form inputs
+    private string newName = "";
+    private int newRating = 0;   // Changed to 0 so stars start hollow
+    private int hoverRating = 0; // Tracks mouse hover state
+    private string newComment = "";
+
+    // Resets the hover effect when your mouse leaves the stars
+    private void ResetHover()
+    {
+        hoverRating = 0;
+    }
+
+    private void SetRating(int value)
+    {
+        newRating = value;
+    }
+
+    private void SetHover(int value)
+    {
+        hoverRating = value;
+    }
+
+    // 4. Logic to add the new review when the button is clicked
+    private void SubmitReview()
+    {
+        // Now also requires a rating greater than 0
+        if (!string.IsNullOrWhiteSpace(newName) && !string.IsNullOrWhiteSpace(newComment) && newRating > 0)
+        {
+            reviews.Insert(0, new Review
+            {
+                Name = newName,
+                Rating = newRating,
+                Comment = newComment,
+                Date = DateTime.Now
+            });
+
+            // Clear the form for the next person
+            newName = "";
+            newRating = 0; // Reset to hollow
+            newComment = "";
+        }
+    }
+}
