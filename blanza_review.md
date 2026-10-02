@@ -1,0 +1,9 @@
+## Project Structure Rating | 4.8/5 ⭐
+
+The repository is cleanly structured, not having much of a hassle to navigate through since its using the default Blazor file structure, but I am still looking for more on the folder structure part, I can't personally say it but its missing something haha. File and folder naming wise, no issue, its following the proper format. For the code organization, its somehow consistent, but yes each of us has our own way of organizing our code, still different from how I do mine, so I don't critic that much on that part. Now for the commits, it is indeed clean and proper, it follows the conventional way of message, giving an easy way to understand the commit and what it is all about. So overall, its good, aside from the comment I made on the folder structure, everything else is good.
+
+---
+
+## Front-End Rating | 4.8/5 ⭐
+
+First and foremost, the site looks pretty good, it has the proper blending of design and contents. The modern style is eye-catching, the design is also properly organized, prioritizing what is the needed rather than putting everything. UI wise, its all good, its readable, and easy to follow, navigating them through is not even to worry about as well, although I noticed that its not that much of a dynamic ui, some parts are cut out whenever I change the size, aside from that its not much of a deal but better it is fixed so that it will be fine to use on other device as well. For the responsiveness, I can't seem to rate as much since this still is on a local stage which is why I cant feel much of its latency since this still doesn't have connections and traffic to worry about. Besides the thing that I mentioned in the UI, overall its all very good, a job well done!
